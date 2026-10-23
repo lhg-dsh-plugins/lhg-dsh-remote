@@ -1,0 +1,24 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+.npmrc
+
+dev-harness/
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
+*.tgz
+
+# npm cache workaround artifacts
+.npm-cache/
+
+# 日活统计口令（本地查询用，绝不入库）
+.stats-key
+
+# 一次性探针（不入库）
+probe_*.mjs
+
+# 渲染中间产物（@2x 原图只用于降采样，不入库）
+*@2x.png
+!docs/shots/picker-dialog@2x.png

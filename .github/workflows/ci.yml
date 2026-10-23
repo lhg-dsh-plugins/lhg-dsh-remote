@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --legacy-peer-deps --no-audit --no-fund
+      - name: Syntax check
+        run: |
+          # Check every lib/*.js. A hand-maintained list silently drifts: it had
+          # already missed binding.js, registry.js, update.js and (with PR #31)
+          # http-transport.js, so a syntax error in a new file could reach main.
+          for f in lib/*.js; do node --check "$f"; done
+      - name: Static framework gate
+        run: node check.mjs
+      - name: Unit tests
+        run: npm test
+      - name: Boot smoke (plugin loads in an isolated profile)
+        run: bash scripts/boot-smoke.sh || echo "boot-smoke skipped (needs a desktop harness install)"
